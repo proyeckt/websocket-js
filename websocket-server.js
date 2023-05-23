@@ -58,14 +58,12 @@ wss.on('connection', (ws) => {
 const broadcastMessage = (message,ws) => {
   for (const connection of connections) {
     if (connection.has(ws)) {
-      for(const client of connection){
-        console.log(client)
-        if(client.readyState === WebSocket.OPEN) {
-          client.send(message);
-          console.log("Message sent");
+        if(connection[0].readyState === WebSocket.OPEN) {
+          connection[0].send(message);
+        }
+         if(connection[1].readyState === WebSocket.OPEN) {
+          connection[1].send(message);
         }
       }
-      break;
     }
-  }
 }
