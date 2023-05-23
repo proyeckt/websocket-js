@@ -4,7 +4,6 @@ const WebSocket = require('ws');
 const port = process.env.PORT || 3000;
 
 const server = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
   .listen(port, () => console.log(`Listening on ${port}`));
 
 // Create a WebSocket server
