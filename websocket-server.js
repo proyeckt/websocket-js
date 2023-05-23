@@ -1,16 +1,15 @@
 const WebSocket = require('ws');
 
-const host = 'localhost';
-const port = 8080;
+const port = 3000;
 
 // Create a WebSocket server
-const wss = new WebSocket.Server({ host, port});
+const wss = new WebSocket.Server({port});
 
 const connections = new Set();
 const clients = new Set();
 
 wss.on('listening', () => {
-  console.log(`WebSocket server is running and listening on ws://${host}:${port}`);
+  console.log(`WebSocket server is running and listening on port: ${port}`);
 });
 
 wss.on('connection', (ws) => {
