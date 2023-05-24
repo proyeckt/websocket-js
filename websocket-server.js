@@ -6,7 +6,6 @@ const port = process.env.PORT || 3000;
 const server = express()
   .listen(port, () => console.log(`Listening on ${port}`));
 
-// Create a WebSocket server
 const wss = new WebSocket.Server({server});
 
 const connections = new Set();
@@ -25,10 +24,8 @@ wss.on('connection', (ws) => {
   console.log("Client added");
   if(clients.size >=2){
     connections.add(new Set(clients));
-    //console.log(clients)
     clients.clear();
     console.log(connections);
-    //console.log(clients);
   }
 
   ws.on('message', (message) => {
@@ -40,9 +37,7 @@ wss.on('connection', (ws) => {
     broadcastMessage(receivedMessage,ws);
   });
 
-  // Handle client disconnection
   ws.on('close', () => {
-    // Remove the client from the set of connected clients
     clients.delete(ws);
 
     /* for (const connection of connections) {
@@ -58,12 +53,13 @@ wss.on('connection', (ws) => {
 const broadcastMessage = (message,ws) => {
   for (const connection of connections) {
     if (connection.has(ws)) {
-        if(connection[0].readyState === WebSocket.OPEN) {
-          connection[0].send(message);
-        }
-         if(connection[1].readyState === WebSocket.OPEN) {
-          connection[1].send(message);
-        }
-      }
+      const iterator = connection.values();
+      sendMsg(iterator.next().value,message);
+      sendMsg(iterator.next().value,message);
     }
+  }
+}
+
+const sendMsg = (client, message) => {
+  if(client.readyState === WebSocket.OPEN) client.send(message);
 }
